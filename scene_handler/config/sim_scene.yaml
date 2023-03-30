@@ -1,0 +1,52 @@
+# Scene frames
+table_reference_frame: "base_link"
+object_reference_frame: "base_link"
+
+# Collision object for picking
+# CYLINDER object specifications
+cylinder_name: "cylinder"
+cylinder_dimensions: [0.03, 0.03] # [height, radius] threshold is .1 m tall .03 meters radius
+cylinder_pose: [0.7, -0.25, .6, 0, 0, 0] # [0.5, -0.25, 0.0, 0, 0, 0]
+
+
+
+
+# Side by side in front
+# box1_pose: [1.0280001163482666, 0.26636356115341187, 0.75, 0, 0, 0]
+# box2_pose: [0.8519999980926514, -0.37909096479415894, 0.75, 0, 0, 0]
+# box3_pose: [0.8450000286102295, -0.21272733807563782, 0.75, 0, 0, 0]
+# box4_pose: [0.8450000286102295, -0.06181824207305908, 0.75, 0, 0, 0]
+
+
+# side by side diagonal 
+box1_pose: [1, -0.3, 0.7603999733924866, 0, 0, 0]
+box2_pose: [1, -0.1, 0.7603999733924866, 0, 0, 0]
+box3_pose: [1, 0.2, 0.7603999733924866, 0, 0, 0]
+box4_pose: [1, 0.4, 0.7603999733924866 , 0, 0, 0]
+
+
+
+# Collision object for picking
+# BOX object specifications
+box1_name: "Box 1"
+box1_dimensions: [0.02, 0.02, 0.2] # [length, width, height] threshold .06 meters wide, .1 m tall and 
+# box1_pose: [1.0280001163482666, 0.26636356115341187, 0.75, 0, 0, 0]
+
+# Collision object for picking
+# BOX object specifications
+box2_name: "Box 2"
+box2_dimensions: [0.02, 0.02, 0.2] # [length, width, height] threshold .06 meters wide, .1 m tall and 
+# box2_pose: [0.8519999980926514, -0.37909096479415894, 0.75, 0, 0, 0]
+
+box3_name: "Box 3"
+box3_dimensions: [0.02, 0.02, 0.2] # [length, width, height] threshold .06 meters wide, .1 m tall and 
+# box3_pose: [0.8450000286102295, -0.21272733807563782, 0.75, 0, 0, 0]
+
+box4_name: "Box 4"
+box4_dimensions: [0.02, 0.02, 0.2] # [length, width, height] threshold .06 meters wide, .1 m tall and 
+# box4_pose: [0.8450000286102295, -0.06181824207305908, 0.75, 0, 0, 0]
+
+# Table model
+table_name: "table"
+table_dimensions: [0.7365999817848206,  1.1937999725341797,0.6603999733924866]  # [length, width, height]
+table_pose: [ 0.953000009059906,-0.014999999664723873, 0.3319999873638153, 0, 0, 0]  

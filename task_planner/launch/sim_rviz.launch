@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Load fetch with MTC's execution capability -->
+  <include file="$(find fetch_moveit_config)/launch/demo.launch">
+  </include>
+  <param name="move_group/capabilities" value="move_group/ExecuteTaskSolutionCapability" />
+
+  <!-- Run rviz with prepared config -->
+  <include file="$(find fetch_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="rviz_config" value="$(find fetch_moveit_config)/config/fetch_mtc.rviz" />
+  </include>
+
+  <node name="ready_pose" pkg="task_planner" type="ready_pose.py" output="screen">
+  </node>
+</launch>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Run rviz with prepared config -->
+  <include file="$(find fetch_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="rviz_config" value="$(find fetch_moveit_config)/config/fetch_mtc.rviz" />
+  </include>
+</launch>
