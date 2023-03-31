@@ -137,9 +137,9 @@ add_library(${PROJECT_NAME}
 
 add_library(tasks
    src/tasks/pick_place_task.cpp
-   src/tasks/move_to_waypoints_task.cpp
-   src/tasks/task_base.cpp
+   src/tasks/move_to_goal_task.cpp
    src/tasks/open_close_gripper_task.cpp
+   src/tasks/task_base.cpp
 )
 
 ## Add cmake target dependencies of the library
@@ -161,8 +161,11 @@ add_executable(${PROJECT_NAME}_node src/task_planner_node.cpp)
 ## same as for the library above
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(pick_and_place src/pick_and_place.cpp)
-add_dependencies(pick_and_place ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_executable(pick_and_place_demo src/pick_and_place_demo.cpp)
+add_dependencies(pick_and_place_demo ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(task_planner_examples src/task_planner_examples.cpp)
+add_dependencies(task_planner_examples ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 
 ## Specify libraries to link a library or executable target against
@@ -172,10 +175,16 @@ target_link_libraries(${PROJECT_NAME}_node
 	${catkin_LIBRARIES}
  )
 
- target_link_libraries(pick_and_place
+target_link_libraries(pick_and_place_demo
  task_planner
  tasks
  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(task_planner_examples
+task_planner
+tasks
+${catkin_LIBRARIES}
 )
 #############
 ## Install ##
@@ -215,12 +224,10 @@ target_link_libraries(${PROJECT_NAME}_node
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 install(FILES
-   launch/fetch_mtc.launch
-   launch/panda_programar.launch
+   launch/fetch_mtc_demo.launch
    launch/task_planner.launch
-   launch/pick_and_place.launch
-   launch/sim_rviz.launch
-   launch/panda_pickplace.launch
+   launch/pick_and_place_demo.launch
+   launch/task_planner_examples.launch
    launch/real_rviz.launch
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
  )

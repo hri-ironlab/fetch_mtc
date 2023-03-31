@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <!-- Run MTC pick and place -->
-  <node name="pick_and_place" pkg="task_planner" type="pick_and_place" output="screen">
-    <param name="execute" value="true" />
+  <node name="pick_and_place_demo" pkg="task_planner" type="pick_and_place_demo" output="screen">
     <rosparam command="load" file="$(find task_planner)/config/fetch_config.yaml" />
     <rosparam command="load" file="$(find scene_handler)/config/sim_scene.yaml" />
   </node>

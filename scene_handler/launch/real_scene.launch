@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- Run MTC pick and place -->
-  <node name="scene_handler_node" pkg="scene_handler" type="scene_handler_node" output="screen">
-  </node>
+  <!-- Run if working with real robot -->
+  <node name="scene_handler_node" pkg="scene_handler" type="scene_handler_node" output="screen"/>
 </launch>

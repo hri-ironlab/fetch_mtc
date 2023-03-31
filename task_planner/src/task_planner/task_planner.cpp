@@ -42,6 +42,19 @@ void TaskPlanner::loadParameters(const ros::NodeHandle& pnh_)
   errors += !rosparam_shortcuts::get(LOGNAME, pnh_, "pick_object", parameters.object_name_);
   errors += !rosparam_shortcuts::get(LOGNAME, pnh_, "place_pose", parameters.place_pose_);
   errors += !rosparam_shortcuts::get(LOGNAME, pnh_, "object_offset", parameters.object_offset_);
+  errors += !rosparam_shortcuts::get(LOGNAME, pnh_, "transform_orientation", transform_orientation);
+
+  // Should do this better at some point
+  if(transform_orientation == 0){
+    rosparam_shortcuts::convertDoublesToEigen(LOGNAME, horizontal_frame_transform ,parameters.grasp_frame_transform_);
+  }
+  else if(transform_orientation == 1){
+    rosparam_shortcuts::convertDoublesToEigen(LOGNAME, vertical_frame_transform ,parameters.grasp_frame_transform_);
+  }
+  else{
+    rosparam_shortcuts::convertDoublesToEigen(LOGNAME, diagonal_frame_transform ,parameters.grasp_frame_transform_);
+  }
+
   rosparam_shortcuts::shutdownIfError(LOGNAME, errors);
 }
 
@@ -63,7 +76,6 @@ void TaskPlanner::TestPickPlace()
   parameters.task_type_ = task_planner::PlanPickPlaceGoal::PICK_AND_PLACE;
 
   ROS_INFO_STREAM(parameters.place_pose_ << "\n" << parameters.object_name_);
-  rosparam_shortcuts::convertDoublesToEigen(LOGNAME, horizontal_frame_transform ,parameters.grasp_frame_transform_);
 
   if(parameters.task_type_ == task_planner::PlanPickPlaceGoal::PICK_AND_PLACE)
   {  
@@ -102,8 +114,6 @@ void TaskPlanner::TestPickPlace()
       plan_status.publish(msg);
       ROS_INFO_NAMED(LOGNAME, "Planning failed");
     }
-
-    
   }
 }
 
@@ -112,10 +122,7 @@ void TaskPlanner::planRobotActionCallback(const task_planner::PickPlaceConstPtr&
   ROS_INFO("Message recieved");
 
   parameters.object_name_ = msg->object_name;
-
-  rosparam_shortcuts::convertDoublesToEigen(LOGNAME, horizontal_frame_transform ,parameters.grasp_frame_transform_);
-
-
+  // If accepting parameterized frame_transform
   parameters.place_pose_ = msg->place_pose;
 
   if(msg->task_type ==  task_planner::PickPlace::PICK_AND_PLACE)

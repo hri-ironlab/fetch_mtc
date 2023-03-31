@@ -18,12 +18,11 @@ base_frame: "base_link"
 surface_link: "table"
 surface_link_two: "shelf"
 
-# Gripper grasp frame transform [x,y,z,r,p,y]
-diagonal_frame_transform: [0.02, 0, 0.0, 0, 3.9275, 0.0] 
-horizontal_frame_transform: [0, 0, 0.0, 0.0, 0.0, 0.0]
-vertical_frame_transform: [0.02, 0, 0.0,  0, 4.713, 0.0]
+# 0: horizontal_frame_transform, 1: vertical_frame_transform, 2: diagonal_frame_transform
+transform_orientation: 2
 
-place_surface_offset:  .001 # place offset from surface
+# Place offset from surface
+place_surface_offset:  .001 
 
 # Valid distance range when approaching an object for picking
 approach_object_min_dist: 0.167

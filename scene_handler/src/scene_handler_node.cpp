@@ -9,7 +9,8 @@ main( int argc,char* argv[] ){
 
 	SceneHandler sceneHandler; 
 
-	ros::Subscriber add_objects_subscriber = node_handle.subscribe( "/unity/scene_objects", 1, &SceneHandler::sceneObjectsCallback,  &sceneHandler);
+	// Uncomment if you want to send object msgs to Unity to display
+	// ros::Subscriber add_objects_subscriber = node_handle.subscribe( "/unity/scene_objects", 1, &SceneHandler::sceneObjectsCallback,  &sceneHandler);
 
 	ROS_INFO("Scene handler begin");
 

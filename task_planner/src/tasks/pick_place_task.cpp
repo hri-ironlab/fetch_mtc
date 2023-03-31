@@ -1,5 +1,4 @@
 #include <tasks/pick_place_task.h>
-#include <rosparam_shortcuts/rosparam_shortcuts.h>
 
 constexpr char LOGNAME[] = "pick and place task";
 

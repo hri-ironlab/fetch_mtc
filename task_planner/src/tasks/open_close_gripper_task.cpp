@@ -1,5 +1,4 @@
 #include <tasks/open_close_gripper_task.h>
-#include <rosparam_shortcuts/rosparam_shortcuts.h>
 
 constexpr char LOGNAME[] = "Open or close hand ask";
 
@@ -23,7 +22,7 @@ bool OpenCloseGripperTask::init(const TaskParameters& parameters)
 
   // Cartesian planner
   auto cartesian_planner = std::make_shared<solvers::CartesianPath>();
-  cartesian_planner->setMaxVelocityScaling(1.0);
+  cartesian_planner->setMaxVelocityScalingFactor(1.0);
   cartesian_planner->setMaxAccelerationScaling(1.0);
   cartesian_planner->setStepSize(.01);
 

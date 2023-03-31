@@ -57,6 +57,8 @@ private:
   void initializeServer();
   std::unique_ptr<PickPlaceServer> pick_place_server_;
 
+  // Which transform to use
+  int transform_orientation;
   std::vector<double> diagonal_frame_transform {0.02, 0, 0.0, 0, 3.9275, 0.0};  
   std::vector<double> horizontal_frame_transform {0.02, 0, 0.0, 0.0, 0.0, 0.0};
   std::vector<double> vertical_frame_transform {0.02, 0, 0.0,  0, 4.713, 0.0};

@@ -139,7 +139,7 @@ void SceneHandler::setupStartScene(ros::NodeHandle& pnh)
   // error += !rosparam_shortcuts::get(LOGNAME, pnh, "cylinder_pose", object_pose);
   // rosparam_shortcuts::shutdownIfError(LOGNAME, error);
 
- // spawnObject(createCylinder(object_name, object_pose, object_reference_frame, object_dimensions));
+  //spawnObject(createCylinder(object_name, object_pose, object_reference_frame, object_dimensions));
 
   // Spawn a Box 1
   error += !rosparam_shortcuts::get(LOGNAME, pnh, "box1_name", object_name);

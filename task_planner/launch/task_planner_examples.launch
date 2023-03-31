@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Run MTC pick and place -->
+  <node name="task_planner_examples" pkg="task_planner" type="task_planner_examples" output="screen">
+    <rosparam command="load" file="$(find task_planner)/config/fetch_config.yaml" />
+  </node>
+</launch>

@@ -1,9 +1,8 @@
-#include <tasks/move_to_waypoints_task.h>
-#include <rosparam_shortcuts/rosparam_shortcuts.h>
+#include <tasks/move_to_goal_task.h>
 
 constexpr char LOGNAME[] = "move to task";
 
-MoveToWaypointsTask::MoveToWaypointsTask(const std::string& task_name) : task_name_(task_name)
+MoveToGoalTask::MoveToGoalTask(const std::string& task_name) : task_name_(task_name)
 {
   task_.reset();
   task_.reset(new moveit::task_constructor::Task(task_name_));
@@ -11,7 +10,7 @@ MoveToWaypointsTask::MoveToWaypointsTask(const std::string& task_name) : task_na
   current_state_stage_ = nullptr;
 }
 
-bool MoveToWaypointsTask::init(const TaskParameters& parameters)
+bool MoveToGoalTask::init(const TaskParameters& parameters)
 {
   ROS_INFO_NAMED(LOGNAME, "Initializing move to pipeline");
   // Create new Task and call it pick_place_task with task_name_name
@@ -33,6 +32,7 @@ bool MoveToWaypointsTask::init(const TaskParameters& parameters)
   t.setProperty("eef", parameters.eef_name_);
   t.setProperty("hand", parameters.hand_group_name_);
   t.setProperty("ik_frame", parameters.hand_frame_);
+  
   /****************************************************
    *                                                  *
    *               Current State                      *
@@ -60,8 +60,8 @@ bool MoveToWaypointsTask::init(const TaskParameters& parameters)
 
   for (int i = 0; i < parameters.robot_states_.size(); i++)
   {
-    std::string waypoint = "waypoint " + i;
-    auto stage = std::make_unique<stages::MoveTo>(waypoint, sampling_planner);
+    std::string goal = "Goal " + i;
+    auto stage = std::make_unique<stages::MoveTo>(goal, sampling_planner);
     stage->setGroup(parameters.arm_group_name_);
     stage->setGoal(parameters.robot_states_[i]);
     t.add(std::move(stage));
@@ -80,7 +80,7 @@ bool MoveToWaypointsTask::init(const TaskParameters& parameters)
   return true;
 }
 
-bool MoveToWaypointsTask::plan()
+bool MoveToGoalTask::plan()
 {
   ROS_INFO_NAMED(LOGNAME, "Start searching for task solutions");
   try
@@ -100,18 +100,18 @@ bool MoveToWaypointsTask::plan()
   return true;
 }
 
-bool MoveToWaypointsTask::preempt()
+bool MoveToGoalTask::preempt()
 {
   task_->preempt();
   return true;
 }
 
-void MoveToWaypointsTask::getSolutionMsg(moveit_task_constructor_msgs::Solution& solution)
+void MoveToGoalTask::getSolutionMsg(moveit_task_constructor_msgs::Solution& solution)
 {
   task_->solutions().front()->fillMessage(solution);
 }
 
-bool MoveToWaypointsTask::execute()
+bool MoveToGoalTask::execute()
 {
   ROS_INFO_NAMED(LOGNAME, "Executing solution trajectory");
   moveit_msgs::MoveItErrorCodes execute_result;

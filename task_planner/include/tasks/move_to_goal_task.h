@@ -38,11 +38,11 @@
 
 using namespace moveit::task_constructor;
 
-class MoveToWaypointsTask : public TaskBase
+class MoveToGoalTask : public TaskBase
 {
 public:
-  MoveToWaypointsTask(const std::string& task_name);
-  ~MoveToWaypointsTask() = default;
+  MoveToGoalTask(const std::string& task_name);
+  ~MoveToGoalTask() = default;
   bool init(const TaskParameters& parameters);
   bool plan();
   bool preempt();
