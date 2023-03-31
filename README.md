@@ -20,7 +20,7 @@ git clone --branch ros1 https://github.com/ZebraDevs/fetch_ros.git
 ```
 
 ## Update fetch_moveit_config files from fetch_ros repo
-Move the files in the folder fetch_files into fetch_ros/fetch_moveit_config/config/
+Move the fetch.srdf in the folder fetch_files into fetch_ros/fetch_moveit_config/config/
 
 ## Build workspace
 ```sh
