@@ -25,6 +25,7 @@ Move the files in the folder fetch_files into fetch_ros/fetch_moveit_config/conf
 ## Build workspace
 ```sh
 cd ..
+rosdep install --from-paths . --ignore-src --rosdistro $ROS_DISTRO
 catkin build
 source devel/setup.bash
 ```
