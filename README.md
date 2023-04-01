@@ -36,3 +36,9 @@ roslaunch task_planner fetch_mtc.launch
 roslaunch scene_handler sim_scene.launch
 roslaunch task_planner pick_and_place.launch
 ```
+# Other Examples
+In two different terminals run the following commands in order
+```sh
+roslaunch task_planner fetch_mtc.launch
+roslaunch task_planner task_planner_examples.launch
+```
