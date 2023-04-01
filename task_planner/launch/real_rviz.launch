@@ -2,6 +2,6 @@
 <launch>
   <!-- Run rviz with real robot -->
   <include file="$(find fetch_moveit_config)/launch/moveit_rviz.launch">
-    <arg name="rviz_config" value="$(find fetch_moveit_config)/config/fetch_mtc.rviz" />
+    <arg name="rviz_config" value="$(find task_planner)/config/fetch_mtc.rviz" />
   </include>
 </launch>
