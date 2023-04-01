@@ -28,7 +28,7 @@ bool PickPlaceTask::init(const TaskParameters& parameters)
 
   // Cartesian planner
   auto cartesian_planner = std::make_shared<solvers::CartesianPath>();
-  cartesian_planner->setMaxVelocityScaling(.2);
+  cartesian_planner->setMaxVelocityScalingFactor(.2);
   cartesian_planner->setMaxAccelerationScaling(.2);
   cartesian_planner->setStepSize(.01);
 
@@ -77,7 +77,6 @@ bool PickPlaceTask::init(const TaskParameters& parameters)
     current_state_stage_ = applicability_filter.get();
     t.add(std::move(applicability_filter));
   }
-
   if (parameters.task_type_ == PickPlace::PICK_ONLY ||
       parameters.task_type_ == PickPlace::PICK_AND_PLACE)
   {
@@ -279,8 +278,7 @@ bool PickPlaceTask::init(const TaskParameters& parameters)
         // Set target pose
         geometry_msgs::PoseStamped p;
 
-        p.header.frame_id =
-            parameters.base_frame_;  // collision_object.header.frame_id;  // object_reference_frame was used before
+        p.header.frame_id = parameters.base_frame_;  // collision_object.header.frame_id;  // object_reference_frame was used before
         p.pose = parameters.place_pose_;
 
         // Take half the objects height and add that to the z position to properly place the object
@@ -370,7 +368,7 @@ bool PickPlaceTask::init(const TaskParameters& parameters)
       t.add(std::move(stage));
     }
   }
-  
+
   try
   {
     t.init();

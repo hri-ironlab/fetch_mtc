@@ -51,20 +51,9 @@ bool OpenCloseGripperTask::init(const TaskParameters& parameters)
       s.start()->scene()->getCurrentState().getAttachedBodies(attached_bodies);
       if (attached_bodies.size() != 0)
       {
-        if (parameters.open_hand_)
-        {
-          comment = "opening hand with object with object attached";
-          return true;
-        }
-        else
-        {
-          comment = "hand already closed with object with id attached";
-          return false;
-        }
-
-        object_attached = true;
+        comment = "Object attached to hand, use pick_place_task instead";
+        return false; 
       }
-      object_attached = false;
       return true;
     });
 
@@ -72,7 +61,7 @@ bool OpenCloseGripperTask::init(const TaskParameters& parameters)
     t.add(std::move(applicability_filter));
   }
 
-  if (object_attached)
+  if (parameters.open_hand_)
   {
     /******************************************************
   ---- *          Open Hand                              *
@@ -83,28 +72,14 @@ bool OpenCloseGripperTask::init(const TaskParameters& parameters)
       stage->setGoal(parameters.hand_open_pose_);
       t.add(std::move(stage));
     }
-
-    /******************************************************
-  ---- *          Forbid collision (hand, object)        *
-     *****************************************************/
-    {
-      auto stage = std::make_unique<stages::ModifyPlanningScene>("forbid collision (hand,object)");
-      stage->allowCollisions(parameters.object_name_,
-                             *t.getRobotModel()->getJointModelGroup(parameters.hand_group_name_), false);
-      t.add(std::move(stage));
-    }
-
-    /******************************************************
-  ---- *          Detach Object                             *
-     *****************************************************/
-    {
-      auto stage = std::make_unique<stages::ModifyPlanningScene>("detach object");
-      stage->detachObject(parameters.object_name_, parameters.hand_frame_);
-      t.add(std::move(stage));
-    }
   }
-
-  // Add place container to task
+  else
+  {
+      auto stage = std::make_unique<stages::MoveTo>("close hand", sampling_planner);
+      stage->setGroup(parameters.hand_group_name_);
+      stage->setGoal(parameters.hand_close_pose_);
+      t.add(std::move(stage));
+  }
 
   try
   {

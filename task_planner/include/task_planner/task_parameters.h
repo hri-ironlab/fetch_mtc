@@ -11,6 +11,7 @@
 #include <eigen_conversions/eigen_msg.h>
 #include <geometry_msgs/Vector3Stamped.h>
 #include <geometry_msgs/Pose.h>
+#include <geometry_msgs/PoseStamped.h>
 
 struct TaskParameters
 {
@@ -47,9 +48,13 @@ struct TaskParameters
 
   geometry_msgs::Pose object_offset_;
 
-  // Waypoints Task
+  // For move to goal, either specify joints or link pose
+  bool use_joint_positions_;
+  // Joint positions
   std::vector<moveit_msgs::RobotState> robot_states_;
-
+  // Link poses
+  std::vector<geometry_msgs::PoseStamped> hand_poses_;
+  
   // Open close task
   bool open_hand_;
 };

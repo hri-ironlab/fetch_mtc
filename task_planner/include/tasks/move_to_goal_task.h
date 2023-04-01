@@ -35,6 +35,8 @@
 #include <moveit_msgs/PlaceLocation.h>
 #include <task_planner/task_parameters.h>
 #include <tasks/task_base.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <moveit_msgs/RobotState.h>
 
 using namespace moveit::task_constructor;
 

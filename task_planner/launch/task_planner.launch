@@ -2,7 +2,6 @@
 <launch>
   <!-- Run task planner node waiting to accept action commands -->
   <node name="task_planner" pkg="task_planner" type="task_planner_node" output="screen">
-    <param name="execute" value="true" />
     <rosparam command="load" file="$(find task_planner)/config/fetch_config.yaml" />
   </node>
 

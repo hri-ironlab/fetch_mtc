@@ -60,6 +60,8 @@ void loadParameters(const ros::NodeHandle& pnh_, TaskParameters& parameters)
     rosparam_shortcuts::convertDoublesToEigen(LOGNAME, diagonal_frame_transform ,parameters.grasp_frame_transform_);
   }
 
+  errors += !rosparam_shortcuts::get(LOGNAME, pnh_, "pick_object", parameters.object_name_);
+  errors += !rosparam_shortcuts::get(LOGNAME, pnh_, "place_pose", parameters.place_pose_);
 
   rosparam_shortcuts::shutdownIfError(LOGNAME, errors);
 }
@@ -72,213 +74,49 @@ int main(int argc, char* argv[])
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
-  /// ***************************** Scene Setup  ***************************** ///
-  auto sceneHandler = std::make_unique<SceneHandler>();
-  sceneHandler->setupStartScene(pnh);
-
-  std::string box_name = "Box 1";
-  geometry_msgs::Pose box_1_place_pose;
-  box_1_place_pose.position.x = 0.5;
-  box_1_place_pose.position.y = -.25;
-  box_1_place_pose.position.z = .6;
-
-  box_1_place_pose.orientation.x = 0.0;
-  box_1_place_pose.orientation.y = 0.0;
-  box_1_place_pose.orientation.z = 0.0;
-  box_1_place_pose.orientation.w = 1.0;
-
-  std::string box_name2 = "Box 2";
-  geometry_msgs::Pose box_2_place_pose;
-  box_2_place_pose.position.x = 0.7;
-  box_2_place_pose.position.y = -.1;
-  box_2_place_pose.position.z = .6;
-
-  box_2_place_pose.orientation.x = 0.0;
-  box_2_place_pose.orientation.y = 0.0;
-  box_2_place_pose.orientation.z = 0.0;
-  box_2_place_pose.orientation.w = 1.0;
-
-  std::string cylinder_name = "cylinder";
-  geometry_msgs::Pose cylinder_place_pose;
-  cylinder_place_pose.position.x = 0.6;
-  cylinder_place_pose.position.y = -0.25;
-  cylinder_place_pose.position.z = .6;
-
-  cylinder_place_pose.orientation.x = 0.0;
-  cylinder_place_pose.orientation.y = 0.0;
-  cylinder_place_pose.orientation.z = 0.0;
-  cylinder_place_pose.orientation.w = 1.0;
-
   TaskParameters parameters;
   loadParameters(pnh, parameters);
 
-  parameters.task_type_ = task_planner::PlanPickPlaceGoal::PICK_AND_PLACE;
-  parameters.object_name_ = "Box 2";
-  parameters.place_pose_ = box_2_place_pose;
+  /// ***************************** Link following hand wave example  ***************************** ///
+  geometry_msgs::PoseStamped hand_wave_start_pose;
+  hand_wave_start_pose.header.frame_id = parameters.base_frame_;
+  hand_wave_start_pose.pose.position.x = 0.042;
+  hand_wave_start_pose.pose.position.y = 0.384;
+  hand_wave_start_pose.pose.position.z = 1.626;
+  hand_wave_start_pose.pose.orientation.y = 0.7068907;
+  hand_wave_start_pose.pose.orientation.w = -0.7073228;
+  
+  geometry_msgs::PoseStamped hand_wave_end_pose;
+  hand_wave_end_pose.header.frame_id = parameters.base_frame_;
+  hand_wave_end_pose.pose.position.x = 0.047;
+  hand_wave_end_pose.pose.position.y = 0.645;
+  hand_wave_end_pose.pose.position.z = 1.622;
+  hand_wave_end_pose.pose.orientation.y = 0.7068907;
+  hand_wave_end_pose.pose.orientation.w = -0.7073228;
 
+  std::vector<geometry_msgs::PoseStamped> hand_poses
+  {
+    hand_wave_start_pose,
+    hand_wave_end_pose,
+    hand_wave_start_pose,
+    hand_wave_end_pose,
+    hand_wave_start_pose,
+    hand_wave_end_pose,
+    hand_wave_start_pose,
+    hand_wave_end_pose   
+  };
 
-  /// ***************************** Joint position following example  ***************************** ///
-
-  std::vector<moveit_msgs::RobotState> robot_states;
-  moveit_msgs::RobotState robot_state;
-
-  robot_state.joint_state.name.push_back("panda_joint1");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint2");
-  robot_state.joint_state.position.push_back(-0.785);
-
-  robot_state.joint_state.name.push_back("panda_joint3");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint4");
-  robot_state.joint_state.position.push_back(-2.356);
-
-  robot_state.joint_state.name.push_back("panda_joint5");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint6");
-  robot_state.joint_state.position.push_back(1.571);
-
-  robot_state.joint_state.name.push_back("panda_joint7");
-  robot_state.joint_state.position.push_back(0.785);
-
-  robot_state.is_diff = true;
-
-  parameters.robot_states_.push_back(robot_state);
-
-  robot_state.joint_state.name.push_back("panda_joint1");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint2");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint3");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint4");
-  robot_state.joint_state.position.push_back(-2.356);
-
-  robot_state.joint_state.name.push_back("panda_joint5");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint6");
-  robot_state.joint_state.position.push_back(1.571);
-
-  robot_state.joint_state.name.push_back("panda_joint7");
-  robot_state.joint_state.position.push_back(0.785);
-
-  robot_state.is_diff = true;
-  parameters.robot_states_.push_back(robot_state);
-
-  robot_state.joint_state.name.push_back("panda_joint1");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint2");
-  robot_state.joint_state.position.push_back(-0.785);
-
-  robot_state.joint_state.name.push_back("panda_joint3");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint4");
-  robot_state.joint_state.position.push_back(-2.356);
-
-  robot_state.joint_state.name.push_back("panda_joint5");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint6");
-  robot_state.joint_state.position.push_back(1.571);
-
-  robot_state.joint_state.name.push_back("panda_joint7");
-  robot_state.joint_state.position.push_back(0.785);
-
-  robot_state.is_diff = true;
-
-  parameters.robot_states_.push_back(robot_state);
-
-  robot_state.joint_state.name.push_back("panda_joint1");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint2");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint3");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint4");
-  robot_state.joint_state.position.push_back(-2.356);
-
-  robot_state.joint_state.name.push_back("panda_joint5");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint6");
-  robot_state.joint_state.position.push_back(1.571);
-
-  robot_state.joint_state.name.push_back("panda_joint7");
-  robot_state.joint_state.position.push_back(0.785);
-
-  robot_state.is_diff = true;
-  parameters.robot_states_.push_back(robot_state);
-
-  robot_state.joint_state.name.push_back("panda_joint1");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint2");
-  robot_state.joint_state.position.push_back(-0.785);
-
-  robot_state.joint_state.name.push_back("panda_joint3");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint4");
-  robot_state.joint_state.position.push_back(-2.356);
-
-  robot_state.joint_state.name.push_back("panda_joint5");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint6");
-  robot_state.joint_state.position.push_back(1.571);
-
-  robot_state.joint_state.name.push_back("panda_joint7");
-  robot_state.joint_state.position.push_back(0.785);
-
-  robot_state.is_diff = true;
-
-  parameters.robot_states_.push_back(robot_state);
-
-  robot_state.joint_state.name.push_back("panda_joint1");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint2");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint3");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint4");
-  robot_state.joint_state.position.push_back(-2.356);
-
-  robot_state.joint_state.name.push_back("panda_joint5");
-  robot_state.joint_state.position.push_back(0.0);
-
-  robot_state.joint_state.name.push_back("panda_joint6");
-  robot_state.joint_state.position.push_back(1.571);
-
-  robot_state.joint_state.name.push_back("panda_joint7");
-  robot_state.joint_state.position.push_back(0.785);
-
-  robot_state.is_diff = true;
-  parameters.robot_states_.push_back(robot_state);
-
-  ROS_INFO("************** Demonstrating MoveToGoalTask **************");
-  /// ***************************** Using waypoint control example ***************************** ///
-  auto move = std::make_unique<MoveToGoalTask>("Move a couple times");
-  if (!move->init(parameters))
+  ROS_INFO("************** Demonstrating MoveToGoalTask Hand Wave Example **************");
+  /// ***************************** Using Goal control example ***************************** ///
+  auto wave = std::make_unique<MoveToGoalTask>("Move a couple times");
+  parameters.use_joint_positions_ = false;
+  parameters.hand_poses_ = hand_poses;
+  if (!wave->init(parameters))
   {
     ROS_INFO_NAMED(LOGNAME, "Initialization failed");
     return 1;
   }
-
-  if (move->plan())
+  if (wave->plan())
   {
     ROS_INFO_NAMED(LOGNAME, "Planning succeded");
   }
@@ -287,7 +125,7 @@ int main(int argc, char* argv[])
     ROS_INFO_NAMED(LOGNAME, "Planning failed");
   }
 
-  if (move->execute())
+  if (wave->execute())
   {
     ROS_INFO_NAMED(LOGNAME, "Execution complete");
   }
@@ -296,10 +134,71 @@ int main(int argc, char* argv[])
     ROS_INFO_NAMED(LOGNAME, "Execution failed");
   }
 
+  /// ***************************** Joint position following disco dance example  ***************************** ///
+  std::vector<std::string> joint_names
+  {
+    "torso_lift_joint", "shoulder_pan_joint", "shoulder_lift_joint", "upperarm_roll_joint",
+    "elbow_flex_joint", "forearm_roll_joint", "wrist_flex_joint", "wrist_roll_joint"
+  };
+
+  std::vector<std::vector<double>> disco_poses
+  {
+    {0.0, 1.5, -0.6, 3.0, 1.0, 3.0, 1.0, 3.0},
+    {0.133, 0.8, 0.75, 0.0, -2.0, 0.0, 2.0, 0.0},
+    {0.266, -0.8, 0.0, 0.0, 2.0, 0.0, -2.0, 0.0},
+    {0.385, -1.5, 1.1, -3.0, -0.5, -3.0, -1.0, -3.0},
+    {0.266, -0.8, 0.0, 0.0, 2.0, 0.0, -2.0, 0.0},
+    {0.133, 0.8, 0.75, 0.0, -2.0, 0.0, 2.0, 0.0},
+    {0.0, 1.5, -0.6, 3.0, 1.0, 3.0, 1.0, 3.0}
+  };
+
+  for(int i = 0; i<disco_poses.size(); i++){
+    moveit_msgs::RobotState robot_state;
+    for(int j = 0; j<disco_poses[i].size(); j++){
+      robot_state.joint_state.name.push_back(joint_names[j]);
+      robot_state.joint_state.position.push_back(disco_poses[i][j]);
+    }
+    robot_state.is_diff = true;
+    parameters.robot_states_.push_back(robot_state);
+  }
+
+  ROS_INFO("************** Demonstrating MoveToGoalTask Disco dance **************");
+  /// ***************************** Using Goal control example ***************************** ///
+  auto disco = std::make_unique<MoveToGoalTask>("Move a couple times");
+  parameters.use_joint_positions_ = true; 
+  if (!disco->init(parameters))
+  {
+    ROS_INFO_NAMED(LOGNAME, "Initialization failed");
+    return 1;
+  }
+
+  if (disco->plan())
+  {
+    ROS_INFO_NAMED(LOGNAME, "Planning succeded");
+  }
+  else
+  {
+    ROS_INFO_NAMED(LOGNAME, "Planning failed");
+  }
+
+  if (disco->execute())
+  {
+    ROS_INFO_NAMED(LOGNAME, "Execution complete");
+  }
+  else
+  {
+    ROS_INFO_NAMED(LOGNAME, "Execution failed");
+  }
+
+  /// ***************************** Scene Setup  ***************************** ///
+  auto sceneHandler = std::make_unique<SceneHandler>();
+  sceneHandler->setupStartScene(pnh);
 
   /// ***************************** Pick object example ***************************** ///
   ROS_INFO("************** Demonstrating PickPlaceTask Pick Object **************");
   auto pick = std::make_unique<PickPlaceTask>("Pick object");
+  parameters.task_type_ = task_planner::PlanPickPlaceGoal::PICK_ONLY;
+  
   if (!pick->init(parameters))
   {
     ROS_INFO_NAMED(LOGNAME, "Initialization failed");
@@ -345,6 +244,35 @@ int main(int argc, char* argv[])
   }
 
   if (place->execute())
+  {
+    ROS_INFO_NAMED(LOGNAME, "Execution complete");
+  }
+  else
+  {
+    ROS_INFO_NAMED(LOGNAME, "Execution failed");
+  }
+
+  /// ***************************** Open gripper example ***************************** ///
+  ROS_INFO("************** Demonstrating OpenCloseGripper Task Close Gripper **************");
+  auto close = std::make_unique<OpenCloseGripperTask>("Close gripper");
+  parameters.open_hand_ = false;
+
+  if (!close->init(parameters))
+  {
+    ROS_INFO_NAMED(LOGNAME, "Initialization failed");
+    return 1;
+  }
+
+  if (close->plan())
+  {
+    ROS_INFO_NAMED(LOGNAME, "Planning succeded");
+  }
+  else
+  {
+    ROS_INFO_NAMED(LOGNAME, "Planning failed");
+  }
+
+  if (close->execute())
   {
     ROS_INFO_NAMED(LOGNAME, "Execution complete");
   }

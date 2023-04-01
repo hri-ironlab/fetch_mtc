@@ -3,5 +3,6 @@
   <!-- Run MTC pick and place -->
   <node name="task_planner_examples" pkg="task_planner" type="task_planner_examples" output="screen">
     <rosparam command="load" file="$(find task_planner)/config/fetch_config.yaml" />
+    <rosparam command="load" file="$(find scene_handler)/config/sim_scene.yaml" />
   </node>
 </launch>

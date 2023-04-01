@@ -19,7 +19,7 @@ surface_link: "table"
 surface_link_two: "shelf"
 
 # 0: horizontal_frame_transform, 1: vertical_frame_transform, 2: diagonal_frame_transform
-transform_orientation: 2
+transform_orientation: 0
 
 # Place offset from surface
 place_surface_offset:  .001 

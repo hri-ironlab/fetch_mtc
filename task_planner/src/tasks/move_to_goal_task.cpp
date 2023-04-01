@@ -20,12 +20,6 @@ bool MoveToGoalTask::init(const TaskParameters& parameters)
   auto sampling_planner = std::make_shared<solvers::PipelinePlanner>();
   sampling_planner->setProperty("goal_joint_tolerance", 1e-5);
 
-  // Cartesian planner
-  auto cartesian_planner = std::make_shared<solvers::CartesianPath>();
-  cartesian_planner->setMaxVelocityScaling(1.0);
-  cartesian_planner->setMaxAccelerationScaling(1.0);
-  cartesian_planner->setStepSize(.01);
-
   // Set task properties, names used for the specific arm group by robot
   // Set task properties
   t.setProperty("group", parameters.arm_group_name_);
@@ -40,31 +34,30 @@ bool MoveToGoalTask::init(const TaskParameters& parameters)
    ***************************************************/
   {
     auto _current_state = std::make_unique<stages::CurrentState>("current state");
-    _current_state->setTimeout(10);
-
-    // Verify that object is not attached for picking and if object is attached for placing
-    auto applicability_filter =
-        std::make_unique<stages::PredicateFilter>("applicability test", std::move(_current_state));
-    applicability_filter->setPredicate([&](const SolutionBase& s, std::string& comment) {
-      s.start()->scene()->printKnownObjects(std::cout);
-      if (s.start()->scene()->getCurrentState().hasAttachedBody(parameters.object_name_))
-      {
-        comment = "moving with object with id '" + parameters.object_name_ + "' attached";
-      }
-      return true;
-    });
-
-    current_state_stage_ = applicability_filter.get();
-    t.add(std::move(applicability_filter));
+    t.add(std::move(_current_state));
   }
 
-  for (int i = 0; i < parameters.robot_states_.size(); i++)
-  {
-    std::string goal = "Goal " + i;
-    auto stage = std::make_unique<stages::MoveTo>(goal, sampling_planner);
-    stage->setGroup(parameters.arm_group_name_);
-    stage->setGoal(parameters.robot_states_[i]);
-    t.add(std::move(stage));
+
+  if(parameters.use_joint_positions_){
+    for (int i = 0; i < parameters.robot_states_.size(); i++)
+    {
+      std::string goal = "Goal " + std::to_string(i);
+      auto stage = std::make_unique<stages::MoveTo>(goal, sampling_planner);
+      stage->setGroup(parameters.arm_group_name_);
+      stage->setGoal(parameters.robot_states_[i]);
+      t.add(std::move(stage));
+    }
+  }
+  else{
+    for (int i = 0; i < parameters.hand_poses_.size(); i++)
+    {
+      std::string goal = "Goal " + std::to_string(i);
+      auto stage = std::make_unique<stages::MoveTo>(goal, sampling_planner);
+      stage->properties().configureInitFrom(Stage::PARENT, { "group" });
+
+      stage->setGoal(parameters.hand_poses_[i]);
+      t.add(std::move(stage));
+    }
   }
 
   try
@@ -94,6 +87,7 @@ bool MoveToGoalTask::plan()
   }
   if (task_->numSolutions() == 0)
   {
+    ros::waitForShutdown(); 
     ROS_ERROR_NAMED(LOGNAME, "Planning failed");
     return false;
   }
