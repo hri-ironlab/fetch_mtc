@@ -23,7 +23,7 @@ bool OpenCloseGripperTask::init(const TaskParameters& parameters)
   // Cartesian planner
   auto cartesian_planner = std::make_shared<solvers::CartesianPath>();
   cartesian_planner->setMaxVelocityScalingFactor(1.0);
-  cartesian_planner->setMaxAccelerationScaling(1.0);
+  cartesian_planner->setMaxAccelerationScalingFactor(1.0);
   cartesian_planner->setStepSize(.01);
 
   // Set task properties, names used for the specific arm group by robot
@@ -122,7 +122,7 @@ bool OpenCloseGripperTask::preempt()
 
 void OpenCloseGripperTask::getSolutionMsg(moveit_task_constructor_msgs::Solution& solution)
 {
-  task_->solutions().front()->fillMessage(solution);
+  task_->solutions().front()->appendTo(solution);
 }
 
 bool OpenCloseGripperTask::execute()

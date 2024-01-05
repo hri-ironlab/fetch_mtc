@@ -29,7 +29,7 @@ bool PickPlaceTask::init(const TaskParameters& parameters)
   // Cartesian planner
   auto cartesian_planner = std::make_shared<solvers::CartesianPath>();
   cartesian_planner->setMaxVelocityScalingFactor(.2);
-  cartesian_planner->setMaxAccelerationScaling(.2);
+  cartesian_planner->setMaxAccelerationScalingFactor(.2);
   cartesian_planner->setStepSize(.01);
 
   // Set task properties, names used for the specific arm group by robot
@@ -415,7 +415,7 @@ bool PickPlaceTask::preempt()
 
 void PickPlaceTask::getSolutionMsg(moveit_task_constructor_msgs::Solution& solution)
 {
-  task_->solutions().front()->fillMessage(solution);
+  task_->solutions().front()->appendTo(solution);
 }
 
 bool PickPlaceTask::execute()

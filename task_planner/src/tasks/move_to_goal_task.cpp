@@ -102,7 +102,7 @@ bool MoveToGoalTask::preempt()
 
 void MoveToGoalTask::getSolutionMsg(moveit_task_constructor_msgs::Solution& solution)
 {
-  task_->solutions().front()->fillMessage(solution);
+  task_->solutions().front()->appendTo(solution);
 }
 
 bool MoveToGoalTask::execute()

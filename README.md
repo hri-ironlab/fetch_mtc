@@ -16,11 +16,8 @@ git clone https://github.com/hri-ironlab/fetch_mtc.git src
 ```sh
 cd src/
 git clone https://github.com/ros-planning/moveit_task_constructor.git
-git clone --branch ros1 https://github.com/ZebraDevs/fetch_ros.git
+git clone --branch ros1 git@github.com:bryceikeda/fetch_ros.git 
 ```
-
-## Update fetch_moveit_config files from fetch_ros repo
-Move the fetch.srdf in the folder fetch_files into fetch_ros/fetch_moveit_config/config/
 
 ## Build workspace
 ```sh
@@ -32,13 +29,13 @@ source devel/setup.bash
 # Run demo
 In three different terminals run the following commands in order
 ```sh
-roslaunch task_planner fetch_mtc.launch
+roslaunch task_planner fetch_mtc_demo.launch
 roslaunch scene_handler sim_scene.launch
-roslaunch task_planner pick_and_place.launch
+roslaunch task_planner pick_and_place_demo.launch
 ```
 # Other Examples
 In two different terminals run the following commands in order
 ```sh
-roslaunch task_planner fetch_mtc.launch
+roslaunch task_planner fetch_mtc_demo.launch
 roslaunch task_planner task_planner_examples.launch
 ```
