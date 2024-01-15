@@ -151,6 +151,7 @@ add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EX
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/task_planner_node.cpp)
+add_executable(PRogramAR_demo_node src/PRogramAR_demo_node.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -160,6 +161,7 @@ add_executable(${PROJECT_NAME}_node src/task_planner_node.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(PRogramAR_demo_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 add_executable(pick_and_place_demo src/pick_and_place_demo.cpp)
 add_dependencies(pick_and_place_demo ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -169,6 +171,12 @@ add_dependencies(task_planner_examples ${${PROJECT_NAME}_EXPORTED_TARGETS} ${cat
 
 
 ## Specify libraries to link a library or executable target against
+target_link_libraries(PRogramAR_demo_node
+	task_planner
+   tasks
+	${catkin_LIBRARIES}
+ )
+
 target_link_libraries(${PROJECT_NAME}_node
 	task_planner
    tasks
@@ -224,6 +232,7 @@ ${catkin_LIBRARIES}
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 install(FILES
+   launch/PRogramAR_demo.launch
    launch/fetch_mtc_demo.launch
    launch/task_planner.launch
    launch/pick_and_place_demo.launch
